@@ -28,11 +28,67 @@ java -jar .\build\libs\minesweeper-kotlin-0.0.1-SNAPSHOT-all.jar
 ## Hyperskill
 * [my profile](https://hyperskill.org/profile/615178637)
 * [Troubleshooting: no tests have run](https://plugins.jetbrains.com/plugin/10081-jetbrains-academy/docs/troubleshooting-guide.html#no_tests_have_run)
+* [discord markdown live previewer](https://discord-markdown-live-previewer.vercel.app/)
 
 ## Stage 5/5 : 
 ## Stage 4/5 : 
 ## Stage 3/5 : 
-## Stage 2/5 : 
+## Stage 2/5 : [Flexible mines](https://hyperskill.org/projects/8/stages/47/implement)
+### Description
+It's no fun when the field has the same setup every time and you know where all the mines are located. Let's generate a random configuration every time the player wants to play the game.
+
+To improve the program, we need to let the player choose how many mines they want on the field. The player needs to input the number of mines they want with their keyboard.
+
+### Objectives
+Your program should ask the player to define the number of mines to add to a 9x9 field with the message 
+**"How many mines do you want on the field?"**. It should then use the input to initialize the field and display it with the mines. At this point, the mines are still visible to the player; you will hide them later.
+
+Make sure to use the following marking symbols:
+
+* **X** for mines
+* **.** for safe cells
+### Examples
+The greater-than symbol followed by a space (> ) represents the user input. Note that it's not part of the input.
+
+#### Example 1:
+```
+How many mines do you want on the field? > 10
+........X
+........X
+......X.X
+X........
+.........
+......X..
+XX......X
+.........
+.....X...
+```
+#### Example 2:
+```
+How many mines do you want on the field? > 10
+.........
+.X.......
+...X...XX
+X........
+.X.......
+.........
+.........
+X......X.
+...X....X
+```
+#### Example 3:
+```
+How many mines do you want on the field? > 20
+.X..XX...
+.....XX.X
+....XX...
+....XX.XX
+.X......X
+.....X...
+..X..XX..
+.........
+.X.....X.
+```
 ## Stage 1/5 : [Lay the groundwork](https://hyperskill.org/projects/8/stages/46/implement)
 ### Description
 Minesweeper is a game of logic where the player is presented with a field full of hidden mines. The goal is to mark the positions of all mines without setting any of them off. It's not a game of wild guessing: it offers hints showing the number of mines around each cell. One wrong move, and game over!
