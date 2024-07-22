@@ -110,6 +110,49 @@ class MineField(_mineFieldDimensions: Pair<Int, Int> = 9 to 9) {
 
     }
 
+    fun numberedSafeCellLocations(): List<MineLocation> {
+        val numberedSafeCellLocations = mutableListOf<MineLocation>()
+        val (width, height) = mineFieldDimensions
+        for (row in 0 until height) {
+            for (col in 0 until width) {
+                val location = MineLocation(col, row)
+                if (isSafeCell(location) && isSafeCellNextToAnyMine(location)) {
+                    numberedSafeCellLocations.add(location)
+                }
+            }
+        }
+        return numberedSafeCellLocations.toList()
+    }
+
+    fun prepareForBattleView(userMarks: Set<MineLocation>): String {
+        val (width, height) = mineFieldDimensions
+        return buildString {
+
+            appendLine(" |${(1..width).joinToString("")}|")
+            appendLine("-|${"-".repeat(width)}|")
+            for (row in 0 until height) {
+                append(row + 1)
+                append("|")
+                for (col in 0 until width) {
+                    val location = MineLocation(col, row)
+                    append(
+                        if (location in userMarks) {
+                            "*"
+                        } else if (mineLocations.contains(location))
+//                            MarkingSymbol.MINE.indicator
+                            MarkingSymbol.SAFE_CELL.indicator
+                        else if (isSafeCellNextToAnyMine(location)) {
+                            numberOfMinesNextToLocation(location)
+                        } else MarkingSymbol.SAFE_CELL.indicator
+                    )
+                }
+                appendLine("|")
+            }
+            appendLine("-|${"-".repeat(width)}|")
+        }
+
+    }
+
     private fun numberOfMinesNextToLocation(location: MineLocation): Int = minesNextToLocation(location).size
     fun minesNextToLocation(location: MineLocation): List<MineLocation> {
         val nearbyMineLocations = mutableListOf<MineLocation>()
@@ -228,6 +271,16 @@ class MineField(_mineFieldDimensions: Pair<Int, Int> = 9 to 9) {
         }
 
     }
+
+    /**
+     * All mines not marked or excess mines marked by user
+     *
+     * @param userMarks
+     * @return
+     */
+    fun allMinesNotMarkedOrExcessMinesMarkedByUser(userMarks: Set<MineLocation>): Boolean =
+        !(mineLocations.all { loc -> loc in userMarks } && userMarks.all { loc -> loc in mineLocations })
+
 }
 
 class Minesweeper(private var mineFieldDimensions: Pair<Int, Int> = 9 to 9, private var numberOfMines: Int = 1) {
@@ -244,6 +297,33 @@ class Minesweeper(private var mineFieldDimensions: Pair<Int, Int> = 9 to 9, priv
 
     enum class MarkingSymbol(val indicator: String) {
         MINE("X"), SAFE_CELL(".")
+    }
+
+    fun stage4() {
+        print("How many mines do you want on the field? > ")
+        mineField = MineField(_mineFieldDimensions = 9 to 9)
+        numberOfMines = readln().toInt()
+        val userMarks = mutableSetOf<MineLocation>()
+        mineField.setMinesRandomized(numberOfMines)
+        print(mineField.prepareForBattleView(userMarks))
+        print("Set/delete mines marks (x and y coordinates): > ")
+        val numberedLocations = mineField.numberedSafeCellLocations()
+        while (mineField.allMinesNotMarkedOrExcessMinesMarkedByUser(userMarks)) {
+            print("Set/delete mines marks (x and y coordinates): > ")
+            val (x, y) = readln().split(" ").map(String::toInt).map(Int::dec)
+            val location = MineLocation(x, y)
+            if (location in numberedLocations) {
+                println("There is a number here!")
+            } else {
+                if (location in userMarks) {
+                    userMarks.remove(location)
+                } else {
+                    userMarks.add(location)
+                }
+                print(mineField.prepareForBattleView(userMarks))
+            }
+        }
+        println("Congratulations! You found all the mines!")
     }
 
     fun stage3() {
@@ -299,5 +379,5 @@ class Minesweeper(private var mineFieldDimensions: Pair<Int, Int> = 9 to 9, priv
 }
 
 fun main() {
-    Minesweeper(mineFieldDimensions = 2 to 2).stage3()
+    Minesweeper().stage4()
 }
