@@ -54,6 +54,41 @@ class MineFieldTest {
         )
     }
 
+    /**
+     * Example3mine field
+     * https://hyperskill.org/projects/8/stages/469/implement
+    │123456789│
+    —│—————————│
+    1│/////////│
+    2│/////111/│
+    3│111//1.1/│
+    4│1.1//1121│
+    5│111//112.│
+    6│/////1.21│
+    7│/////111/│
+    8│111//////│
+    9│1.1//////│
+    —│—————————│
+     */
+
+    @Test
+    fun example3MineField() {
+        mineField = MineField(_mineFieldDimensions = 9 to 9)
+        mineField.setMines( // 5 mines
+            listOf(
+                MineLocation(6, 2),
+                MineLocation(1, 3),
+                MineLocation(8, 4),
+                MineLocation(6, 5),
+                MineLocation(1, 8),
+            )
+        )
+        println(mineField.prepareForBattleView(setOf(), setOf(), true, true))
+//        val userFreeMarks = mutableSetOf(MineLocation(4, 4))
+        val userFreeMarks = mineField.floodFill(MineLocation(4, 4))
+        println(mineField.prepareForBattleView(setOf(),userFreeMarks=userFreeMarks, false, true))
+    }
+
 
     @Test
     fun mineView() {
@@ -68,7 +103,7 @@ class MineFieldTest {
     @Test
     fun randomizedMines() {
         mineField.mineFieldDimensions = 5 to 5
-        mineField.setMinesRandomized(10)
+        mineField.setMinesRandomized(10, listOf())
         println(mineField.mineView())
     }
 
